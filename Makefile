@@ -1,9 +1,9 @@
-export HTTP_PROXY=http://proxy-dmz.intel.com:911
-export HTTPS_PROXY=http://proxy-dmz.intel.com:912
-export NO_PROXY="localhost,127.0.0.1,intel.com,.intel.com,.*.intel.com"
-export no_proxy=${NO_PROXY}
-export http_proxy=${HTTP_PROXY}
-export https_proxy=${HTTPS_PROXY}
+#export HTTP_PROXY=http://proxy-dmz.intel.com:911
+#export HTTPS_PROXY=http://proxy-dmz.intel.com:912
+#export NO_PROXY="localhost,127.0.0.1,intel.com,.intel.com,.*.intel.com"
+#export no_proxy=${NO_PROXY}
+#export http_proxy=${HTTP_PROXY}
+#export https_proxy=${HTTPS_PROXY}
 
  
 PROJECT ?= permatrack

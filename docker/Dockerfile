@@ -1,8 +1,11 @@
 # Copyright 2020 Toyota Research Institute.  All rights reserved.
 
-FROM nvidia/cuda:11.7.0-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 ENV PROJECT=permatrack
+ENV PYTORCH_VERSION=1.11.0
+ENV TORCHVISION_VERSION=0.12.0
+ENV NCCL_VERSION=2.9.6-1+cuda11.3
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
@@ -23,8 +26,8 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
     vim \
     wget \
     ca-certificates \
-    libcudnn8-dev \
-    libnccl-dev \
+    libnccl2=${NCCL_VERSION} \
+    libnccl-dev=${NCCL_VERSION} \
     libjpeg-dev \
     libpng-dev \
     python${PYTHON_VERSION} \
@@ -55,7 +58,9 @@ RUN pip install easydict scipy numpy pyquaternion matplotlib jupyter h5py \
     pycuda numba cython motmetrics scikit-learn moviepy imageio yacs
 
 # Install PyTorch
-RUN pip install torch torchvision && ldconfig
+RUN pip install torch==${PYTORCH_VERSION} \
+    torchvision==${TORCHVISION_VERSION} && ldconfig
+
 
 RUN pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
 
