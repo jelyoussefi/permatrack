@@ -35,7 +35,8 @@ DOCKER_OPTS := \
 
 NGPUS=$(shell nvidia-smi -L | wc -l)
 
-DOCKER_PROXY = --build-arg http_proxy=${HTTP_PROXY} --build-arg https_proxy=${HTTPS_PROXY}
+DOCKER_BUILD_PROXY = --build-arg http_proxy=${HTTP_PROXY} --build-arg https_proxy=${HTTPS_PROXY}
+DOCKER_RUN_PROXY = --env HTTP_PROXY=${HTTP_PROXY} --env HTTPS_PROXY=${HTTPS_PROXY}
 
 .PHONY: all clean docker-build
 
@@ -47,15 +48,15 @@ clean:
 	find . -name "__pycache__" | xargs rm -rf
 
 docker-build:
-	docker build  ${DOCKER_PROXY} \
+	docker build  ${DOCKER_BUILD_PROXY} \
 		-f docker/Dockerfile \
 		-t ${DOCKER_IMAGE} .
 
 docker-start-interactive: docker-build
-	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_IMAGE} bash
+	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_RUN_PROXY} ${DOCKER_IMAGE} bash
 
 docker-run: docker-build
-	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_IMAGE} \
+	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_RUN_PROXY} ${DOCKER_IMAGE} \
 		bash -c "${COMMAND}"
 		
 
