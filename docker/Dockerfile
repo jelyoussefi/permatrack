@@ -5,13 +5,11 @@ FROM nvidia/cuda:10.0-devel-ubuntu18.04
 ENV PROJECT=permatrack
 ENV PYTORCH_VERSION=1.4
 ENV TORCHVISION_VERSION=0.5.0
-ENV CUDNN_VERSION=7.6.5.32-1+cuda10.1
-ENV NCCL_VERSION=2.4.8-1+cuda10.1
 ENV TRT_VERSION=6.0.1.5
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-ARG python=3.6
+ARG python=3.7
 ENV PYTHON_VERSION=${python}
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -28,9 +26,8 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
     vim \
     wget \
     ca-certificates \
-    libcudnn7=${CUDNN_VERSION} \
-    libnccl2=${NCCL_VERSION} \
-    libnccl-dev=${NCCL_VERSION} \
+    libcudnn8-dev \
+    libnccl-dev \
     libjpeg-dev \
     libpng-dev \
     python${PYTHON_VERSION} \
