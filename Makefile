@@ -4,6 +4,7 @@ PROJECT ?= permatrack
 WORKSPACE ?= /workspace/$(PROJECT)
 DOCKER_IMAGE ?= ${PROJECT}:latest
 
+	
 SHMSIZE ?= 444G
 DOCKER_OPTS := \
 			--name ${PROJECT} \
@@ -34,17 +35,19 @@ DOCKER_OPTS := \
 
 NGPUS=$(shell nvidia-smi -L | wc -l)
 
+DOCKER_PROXY = --build-arg http_proxy=${HTTP_PROXY} --build-arg https_proxy=${HTTPS_PROXY}
 
 .PHONY: all clean docker-build
 
 all: clean
+
 
 clean:
 	find . -name "*.pyc" | xargs rm -f && \
 	find . -name "__pycache__" | xargs rm -rf
 
 docker-build:
-	docker build \
+	docker build  ${DOCKER_PROXY} \
 		-f docker/Dockerfile \
 		-t ${DOCKER_IMAGE} .
 
@@ -54,3 +57,6 @@ docker-start-interactive: docker-build
 docker-run: docker-build
 	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_IMAGE} \
 		bash -c "${COMMAND}"
+		
+
+
