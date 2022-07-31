@@ -3,8 +3,8 @@
 FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 ENV PROJECT=permatrack
-ENV PYTORCH_VERSION=1.11.0
-ENV TORCHVISION_VERSION=0.12.0
+ENV PYTORCH_VERSION=1.12.0+cu113
+ENV TORCHVISION_VERSION=0.13.0+cu113
 ENV NCCL_VERSION=2.9.6-1+cuda11.3
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -48,6 +48,7 @@ RUN apt-get install -y --no-install-recommends openssh-client openssh-server sud
     mkdir -p /var/run/sshd
 
 RUN ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python
+RUN ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -60,7 +61,9 @@ RUN pip3 install easydict scipy numpy pyquaternion matplotlib jupyter h5py \
 
 # Install PyTorch
 RUN pip3 install torch==${PYTORCH_VERSION} \
-    torchvision==${TORCHVISION_VERSION} && ldconfig
+    torchvision==${TORCHVISION_VERSION} \
+    --extra-index-url https://download.pytorch.org/whl/cu113 && \
+    ldconfig
 
 
 RUN pip3 install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
@@ -74,7 +77,7 @@ WORKDIR /workspace/${PROJECT}
 
 # Copy project source last (to avoid cache busting)
 WORKDIR /workspace/${PROJECT}
-RUN cd /usr/bin && ln -sf python python3
+
 COPY . /workspace/${PROJECT}
 RUN cd src/lib/model/networks/ && \
     rm -rf ./DCNv2 && \
