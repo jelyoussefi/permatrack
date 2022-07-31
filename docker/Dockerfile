@@ -3,8 +3,8 @@
 FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 ENV PROJECT=permatrack
-ENV PYTORCH_VERSION=1.11.0
-ENV TORCHVISION_VERSION=0.12.0
+ENV PYTORCH_VERSION=1.7.1
+ENV TORCHVISION_VERSION=0.8.2
 ENV NCCL_VERSION=2.9.6-1+cuda11.3
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -40,7 +40,8 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
     bzip2 \
     htop \
     gnuplot \
-    ffmpeg
+    ffmpeg \
+    ninja-build
 
 # Install OpenSSH for MPI to communicate between containers
 RUN apt-get install -y --no-install-recommends openssh-client openssh-server && \
