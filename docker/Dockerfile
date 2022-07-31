@@ -3,8 +3,8 @@
 FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 ENV PROJECT=permatrack
-ENV PYTORCH_VERSION=1.7.1
-ENV TORCHVISION_VERSION=0.8.2
+ENV PYTORCH_VERSION=1.11.0
+ENV TORCHVISION_VERSION=0.12.0
 ENV NCCL_VERSION=2.9.6-1+cuda11.3
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -44,7 +44,7 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
     ninja-build
 
 # Install OpenSSH for MPI to communicate between containers
-RUN apt-get install -y --no-install-recommends openssh-client openssh-server && \
+RUN apt-get install -y --no-install-recommends openssh-client openssh-server sudo && \
     mkdir -p /var/run/sshd
 
 RUN ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python
@@ -54,16 +54,16 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     rm get-pip.py
 
 # Install Pydata and other deps
-RUN pip install easydict scipy numpy pyquaternion matplotlib jupyter h5py \
+RUN pip3 install easydict scipy numpy pyquaternion matplotlib jupyter h5py \
     awscli nuscenes-devkit tqdm progress path.py pyyaml opencv-python \
-    pycuda numba cython motmetrics scikit-learn moviepy imageio yacs
+    pycuda numba cython motmetrics scikit-learn==0.22.1 moviepy imageio yacs
 
 # Install PyTorch
-RUN pip install torch==${PYTORCH_VERSION} \
+RUN pip3 install torch==${PYTORCH_VERSION} \
     torchvision==${TORCHVISION_VERSION} && ldconfig
 
 
-RUN pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
+RUN pip3 install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI'
 
 RUN pip3 install git+https://github.com/achalddave/python-script-utils.git@v0.0.2#egg=script_utils
 
@@ -74,5 +74,11 @@ WORKDIR /workspace/${PROJECT}
 
 # Copy project source last (to avoid cache busting)
 WORKDIR /workspace/${PROJECT}
+RUN cd /usr/bin && ln -sf python python3
 COPY . /workspace/${PROJECT}
+RUN cd src/lib/model/networks/ && \
+    rm -rf ./DCNv2 && \
+    git clone https://github.com/jinfagang/DCNv2_latest DCNv2 && \
+    cd DCNv2 && ./make.sh
+    
 ENV PYTHONPATH="/workspace/${PROJECT}:$PYTHONPATH"
