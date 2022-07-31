@@ -81,4 +81,4 @@ RUN cd src/lib/model/networks/ && \
     git clone https://github.com/jinfagang/DCNv2_latest DCNv2 && \
     cd DCNv2 && ./make.sh
     
-ENV PYTHONPATH="/workspace/${PROJECT}:$PYTHONPATH"
+ENV PYTHONPATH="/workspace/${PROJECT}:/workspace/${PROJECT}/src/lib/model/networks/DCNv2:$PYTHONPATH"
