@@ -1,5 +1,4 @@
 cd /workspace/permatrack/src && \
-mkdir -p ../data/output
 python test.py tracking \
 	--exp_id pd \
 	--dataset pd_tracking \
@@ -10,5 +9,4 @@ python test.py tracking \
 	--gru_filter_size 7 \
 	--num_gru_layers 1 \
 	--stream_test \
-	--debug 4 \
-	--debug_dir ../data/output
+	--debug 4 

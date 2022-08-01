@@ -17,13 +17,14 @@ DOCKER_OPTS := \
 			-e AWS_SECRET_ACCESS_KEY \
 			-e HOST_HOSTNAME= \
 			-e NCCL_DEBUG=VERSION \
-            -e DISPLAY=${DISPLAY} \
-            -e XAUTHORITY \
-            -e NVIDIA_DRIVER_CAPABILITIES=all \
+			-e DISPLAY=${DISPLAY} \
+			-e XAUTHORITY \
+			-e NVIDIA_DRIVER_CAPABILITIES=all \
 			-v ~/.aws:/root/.aws \
 			-v /root/.ssh:/root/.ssh \
 			-v ~/.cache:/root/.cache \
-			-v ${DOCKER_IMAGE}:${WORKSPACE}/data \
+			-v ${DATA_PATH}:${WORKSPACE}/data \
+			-v ${DATA_PATH}/output:${WORKSPACE}/exp \
 			-v /mnt/fsx/:/mnt/fsx \
 			-v /dev/null:/dev/raw1394 \
 			-v /tmp:/tmp \
