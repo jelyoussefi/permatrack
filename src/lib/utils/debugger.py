@@ -42,7 +42,6 @@ class WebServer():
       
     if self.running:
       self.running = False;
-      self.ready = False
       self.cv.notify()
       self.cv.release()
       self.proc.join()
@@ -51,7 +50,6 @@ class WebServer():
     self.cv.release()
 
   def put(self, frame):
-    self.cv.acquire()
 
     frame_size = frame.shape[:-1]
     fontFace = cv2.FONT_HERSHEY_SIMPLEX
@@ -62,9 +60,10 @@ class WebServer():
     textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
     textPos = (int(frame_size[1]/2 - textsize[0]/2), 15)
     frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
-   
+    
+    self.cv.acquire()
+ 
     for q in self.queues:
-      print("--------------------------------------------------")
       q.put_nowait(frame.copy())
 
     self.cv.release()
@@ -74,39 +73,34 @@ class WebServer():
     app = self.app
     @app.route('/')
     def index():
-      self.ready = True;
-      return render_template('index.html', camera_id=self.camera_id)
+      return render_template('index.html')
 
     @app.route('/video_feed')
     def video_feed():
+      self.cv.acquire()
+      
       queue = Queue();
       self.queues.append(queue)
+      
+      self.cv.release()
+
       return Response(self.video_stream(queue), mimetype='multipart/a-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
   def video_stream(self, queue): 
-    self.cv.acquire()
 
     while self.running:
       try:
-        self.cv.release()
-        print("=========== {}".format(queue.size()))
         frame = queue.get(timeout=0.5)
-        self.cv.acquire()
       except:
         continue
 
       if frame is not None:
-        
-        self.cv.release()
         ret, jpg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
           b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
-        self.cv.acquire()
           
-    self.cv.release()
-
 class Debugger(object):
   def __init__(self, opt, dataset):
     self.opt = opt
