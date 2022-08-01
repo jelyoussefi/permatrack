@@ -141,6 +141,7 @@ class Debugger(object):
       self.video_file.release()
 
   def start_web_server(self):
+    print("start web_server")
     if self.web_server is None:
       self.queue = Queue();
       self.web_server = WebServer(self.queue)

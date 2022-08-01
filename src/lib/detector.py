@@ -215,9 +215,7 @@ class Detector(object):
   def close_video(self):
     if self.opt.debug == 4:
       self.debugger.stop_video()
-    elif self.opt.debug == 5:
-      self.debugger.start_web_server()
-
+    
   def _transform_scale(self, image, scale=1):
     '''
       Prepare input image in different testing modes.
