@@ -95,9 +95,10 @@ class WebServer():
       print("----------------4--------------")
 
       try:
-        print("------------------------------ {}".format(q.size()))
         frame = q.get(timeout=0.5)
       except:
+        print("------------------------------ {}".format(q.size()))
+        time.sleep(1)
         continue
 
       if frame is not None:
