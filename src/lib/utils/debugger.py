@@ -78,7 +78,7 @@ class WebServer():
 
     @app.route('/video_feed')
     def video_feed():
-      queue = Queue;
+      queue = Queue();
       self.queues.append(queue)
       return Response(self.video_stream(queue), mimetype='multipart/a-mixed-replace; boundary=frame')
 
