@@ -25,12 +25,13 @@ class WebServer():
     self.running = False; 
     self.ready = False
 
-  def start(self):
+  def start(self, camera_id):
     self.cv.acquire()
   
     if self.running == False:
       self.proc = Thread(target=self.handler)
       self.proc.daemon = True
+      self.camera_id = camera_id
       self.running = True;
       self.proc.start()
 
@@ -61,7 +62,7 @@ class WebServer():
     @app.route('/')
     def index():
       self.ready = True;
-      return render_template('index.html')
+      return render_template('index.html', camera_id=camera_id)
 
     @app.route('/video_feed')
     def video_feed():
@@ -142,13 +143,11 @@ class Debugger(object):
     if self.video_file is not None:
       self.video_file.release()
 
-  def start_web_server(self):
-    print("start web_server 1")
+  def start_web_server(self, idx):
     if self.web_server is None:
       self.queue = Queue();
       self.web_server = WebServer(self.queue)
-    self.web_server.start();
-    print("start web_server 2")
+    self.web_server.start(idx);
 
   def stop_web_server(self):
     if self.web_server is not None:
