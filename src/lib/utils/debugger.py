@@ -20,7 +20,7 @@ class WebServer():
   def __init__(self, queue, port=5000):
     self.app = Flask(__name__)
     self.port = port
-    self,queue = queue;
+    self.queue = queue;
     self.cv = Condition()
     self.running = False; 
 
@@ -319,7 +319,7 @@ class Debugger(object):
     self.video_file.write(self.imgs[vis_type])
 
   def add_to_web_server(self, vis_type='generic'):
-    self.queue.put(obj)(self.imgs[vis_type])
+    self.queue.put(self.imgs[vis_type])
     
   def save_all_imgs(self, path='./cache/debug/', prefix='', genID=False):
     if genID:

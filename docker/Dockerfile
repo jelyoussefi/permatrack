@@ -57,7 +57,7 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 # Install Pydata and other deps
 RUN pip3 install easydict scipy numpy pyquaternion matplotlib jupyter h5py \
     awscli nuscenes-devkit tqdm progress path.py pyyaml opencv-python \
-    pycuda numba cython motmetrics scikit-learn==0.22.1 moviepy imageio yacs
+    pycuda numba cython motmetrics scikit-learn==0.22.1 moviepy imageio yacs flask
 
 # Install PyTorch
 RUN pip3 install torch==${PYTORCH_VERSION} \
