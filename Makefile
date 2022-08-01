@@ -1,14 +1,11 @@
 export HTTP_PROXY=http://proxy-dmz.intel.com:911
 export HTTPS_PROXY=http://proxy-dmz.intel.com:912
-export NO_PROXY="localhost,127.0.0.1,intel.com,.intel.com,.*.intel.com"
-export no_proxy=${NO_PROXY}
-export http_proxy=${HTTP_PROXY}
-export https_proxy=${HTTPS_PROXY}
-
  
 PROJECT ?= permatrack
 WORKSPACE ?= /workspace/$(PROJECT)
 DOCKER_IMAGE ?= ${PROJECT}:latest
+
+DATA_PATH ?= /data
 
 SHMSIZE ?= 444G
 DOCKER_OPTS := \
@@ -26,7 +23,7 @@ DOCKER_OPTS := \
 			-v ~/.aws:/root/.aws \
 			-v /root/.ssh:/root/.ssh \
 			-v ~/.cache:/root/.cache \
-			-v /data:/data \
+			-v ${DOCKER_IMAGE}:${WORKSPACE}/data \
 			-v /mnt/fsx/:/mnt/fsx \
 			-v /dev/null:/dev/raw1394 \
 			-v /tmp:/tmp \
