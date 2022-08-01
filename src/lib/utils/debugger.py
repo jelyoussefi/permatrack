@@ -89,11 +89,13 @@ class WebServer():
 
     while self.running:
       try:
+        print("------------------------------ {}".format(queue.size()))
         frame = queue.get(timeout=0.5)
       except:
         continue
 
       if frame is not None:
+        print("done")
         ret, jpg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
           b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
