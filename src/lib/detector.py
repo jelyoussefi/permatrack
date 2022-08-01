@@ -123,7 +123,7 @@ class Detector(object):
           if self.opt.debug == 4:
             self.debugger.start_video(self.opt.debug_dir, self.video_id, image.shape[1], image.shape[0])
           elif self.opt.debug == 5:
-            self.debugger.start_web_server();
+            self.debugger.start_web_server(self.video_id);
 
           self.video_id += 1
         pre_hm = None
