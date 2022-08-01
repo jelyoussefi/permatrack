@@ -64,7 +64,7 @@ class WebServer():
     frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
    
     for q in self.queues:
-      q.put_nowait(frame)
+      q.put_nowait(frame.copy())
 
     self.cv.release()
   
