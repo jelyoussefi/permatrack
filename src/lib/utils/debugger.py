@@ -79,14 +79,17 @@ class WebServer():
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
   def video_stream(self): 
+    print("----------------1--------------")
 
     self.cv.acquire()
+    print("----------------2--------------")
     
     q = Queue();
     self.queues.append(q)
     
     self.cv.release()
 
+    print("----------------3--------------")
 
     while self.running:
       try:
