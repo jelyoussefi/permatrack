@@ -60,15 +60,11 @@ class WebServer():
     textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
     textPos = (int(frame_size[1]/2 - textsize[0]/2), 15)
     frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
-    
-    self.cv.acquire()
- 
+     
     for q in self.queues:
       q.put_nowait(frame.copy())
 
-    self.cv.release()
   
-
   def handler(self):
     app = self.app
     @app.route('/')
