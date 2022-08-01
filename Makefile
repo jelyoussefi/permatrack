@@ -13,6 +13,7 @@ SHMSIZE ?= 444G
 DOCKER_OPTS := \
 			--name ${PROJECT} \
 			--rm -it \
+			-a stdout -a stderr \
 			--shm-size=${SHMSIZE} \
 			-e AWS_DEFAULT_REGION \
 			-e AWS_ACCESS_KEY_ID \

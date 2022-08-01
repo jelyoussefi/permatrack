@@ -84,3 +84,5 @@ RUN cd /workspace/${PROJECT}/src/lib/model/networks/ && \
     git clone https://github.com/jinfagang/DCNv2_latest DCNv2 
 
 ENV PYTHONPATH="/workspace/${PROJECT}:/workspace/${PROJECT}/src/lib/model/networks/DCNv2:$PYTHONPATH"
+
+ENTRYPOINT ["/workspace/${PROJECT}/benchmark.sh"]
