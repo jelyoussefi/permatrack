@@ -82,7 +82,7 @@ class WebServer():
         continue
 
       if frame is not None:
-        text = "Camera "+self.camera_id
+        text = "Camera "+str(self.camera_id)
         coordinates = (100,100)
         fontScale = 1
         color = (255,0,255)
