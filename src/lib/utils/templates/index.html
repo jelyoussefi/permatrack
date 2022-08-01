@@ -2,23 +2,17 @@
   <head>
     <style>
     body {
-      background-color: #0000EE;
     }
     img { 
       display:block;
       margin-left: auto;
       margin-right:auto;
       padding-top:40px;
+      border: 5px solid #555;
       } 
     h1 {
       padding-top:40px;
       font-size: 36px;
-    }
-
-    h2 {
-      padding-top:40px;
-      padding-bottom:10px;
-      font-size: 20px;
     }
 
   </style>
@@ -26,7 +20,6 @@
   </head>
   <body>
     <h1 align="center">Pedestrian Tracking </h1>
-    <h2 align="center">Camera {{ camera_id }} </h2>
     <img align="center" src="{{ url_for('video_feed') }}" >
   </body>
 

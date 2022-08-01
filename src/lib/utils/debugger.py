@@ -87,10 +87,10 @@ class WebServer():
         fontFace = cv2.FONT_HERSHEY_SIMPLEX
         fontScale = 0.5
         color = (0,255,0)
-        thickness = 2
+        thickness = 1
         text = "Camera "+str(self.camera_id)
         textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
-        textPos = (int(frame_size[1]/2 - textsize[0]/2), 10)
+        textPos = (int(frame_size[1]/2 - textsize[0]/2), 20)
         frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
 
         self.cv.release()
