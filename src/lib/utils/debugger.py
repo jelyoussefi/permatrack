@@ -81,13 +81,11 @@ class WebServer():
   def video_stream(self): 
     print("----------------1--------------")
 
-    self.cv.acquire()
     print("----------------2--------------")
     
     q = Queue();
     self.queues.append(q)
     
-    self.cv.release()
 
     print("----------------3-------------- {}".format(self.running))
 
