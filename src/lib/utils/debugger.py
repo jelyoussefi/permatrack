@@ -54,7 +54,7 @@ class WebServer():
       return render_template('index.html')
 
     @app.route('/video_feed')
-    def video_feed:
+    def video_feed():
       return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
@@ -85,6 +85,8 @@ class Debugger(object):
     self.out_size = 384 if opt.dataset == 'kitti' else 512
     self.cnt = 0
     self.video_file = None
+    self.queue = None 
+    self.web_server = None
     colors = [(color_list[i]).astype(np.uint8) for i in range(len(color_list))]
     while len(colors) < len(self.names):
       colors = colors + colors[:min(len(colors), len(self.names) - len(colors))]
