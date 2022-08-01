@@ -1,3 +1,5 @@
+cd /workspace/permatrack/src/lib/model/networks/DCNv2/ && ./make.sh 
+
 cd /workspace/permatrack/src && \
 python test.py tracking \
 	--exp_id pd \

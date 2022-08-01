@@ -23,6 +23,7 @@ class WebServer():
     self.queue = queue;
     self.cv = Condition()
     self.running = False; 
+    self.ready = False
 
   def start(self):
     self.cv.acquire()
@@ -40,6 +41,7 @@ class WebServer():
       
     if self.running:
       self.running = False;
+      self.ready = False
       self.cv.notify()
       self.cv.release()
       self.proc.join()
@@ -47,10 +49,18 @@ class WebServer():
 
     self.cv.release()
 
+  def put(self, frame):
+    self.cv.acquire()
+    if self.ready:
+      self.queue.put_nowait(frame)
+    self.cv.release()
+  
+
   def handler(self):
     app = self.app
     @app.route('/')
     def index():
+      self.ready = True;
       return render_template('index.html')
 
     @app.route('/video_feed')
@@ -67,7 +77,7 @@ class WebServer():
         frame = self.queue.get(timeout=0.5)
       except:
         continue
-        
+
       if frame is not None:
         self.cv.release()
         ret, jpg = cv2.imencode('.jpg', frame)
