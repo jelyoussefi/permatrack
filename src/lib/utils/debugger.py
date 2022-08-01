@@ -89,9 +89,11 @@ class WebServer():
     
     self.cv.release()
 
-    print("----------------3--------------")
+    print("----------------3-------------- {}".format(self.running))
 
     while self.running:
+      print("----------------4--------------")
+
       try:
         print("------------------------------ {}".format(q.size()))
         frame = q.get(timeout=0.5)
