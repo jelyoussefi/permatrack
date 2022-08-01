@@ -74,7 +74,9 @@ class WebServer():
 
     while self.running:
       try:
+        self.cv.release()
         frame = self.queue.get(timeout=0.5)
+        self.cv.acquire()
       except:
         continue
 
@@ -141,11 +143,12 @@ class Debugger(object):
       self.video_file.release()
 
   def start_web_server(self):
-    print("start web_server")
+    print("start web_server 1")
     if self.web_server is None:
       self.queue = Queue();
       self.web_server = WebServer(self.queue)
     self.web_server.start();
+    print("start web_server 2")
 
   def stop_web_server(self):
     if self.web_server is not None:
