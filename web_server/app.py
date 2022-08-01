@@ -12,7 +12,7 @@ def index():
 
 def stream():
     global camera_id
-    video_path = "../data/output/tracking/pd/debug/"
+    video_path = "/data/output/tracking/pd/debug/"
     while True:
         video_file = video_path + "vid_" + str(camera_id) + ".avi"
         if exists(video_file):
@@ -30,7 +30,7 @@ def stream():
             else:
                 camera_id += 1;
                 break;
-            time.sleep(0.001)
+            time.sleep(0.025)
 
 @app.route('/video_feed')
 def video_feed():
