@@ -63,14 +63,17 @@ class WebServer():
     self.cv.acquire()
 
     while self.running:
-
+      try:
         frame = self.queue.get(timeout=0.5)
-        if frame is not None:
-          self.cv.release()
-          ret, jpg = cv2.imencode('.jpg', frame)
-          yield (b'--frame\r\n'
-            b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
-          self.cv.acquire()
+      except:
+        continue
+        
+      if frame is not None:
+        self.cv.release()
+        ret, jpg = cv2.imencode('.jpg', frame)
+        yield (b'--frame\r\n'
+          b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
+        self.cv.acquire()
           
     self.cv.release()
 
