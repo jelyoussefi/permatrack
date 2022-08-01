@@ -78,7 +78,7 @@ class WebServer():
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
-  def video_stream(self, queue): 
+  def video_stream(self): 
 
     self.cv.acquire()
     
