@@ -1,4 +1,9 @@
-cd /workspace/permatrack/src/lib/model/networks/DCNv2/ && ./make.sh 
+if [ ! -f /workspace/permatrack/src/lib/model/networks/DCNv2/.built ]
+then
+	cd /workspace/permatrack/src/lib/model/networks/DCNv2/ && \
+	 ./make.sh && \
+	 touch .built 
+fi
 
 cd /workspace/permatrack/src && \
 python test.py tracking \
