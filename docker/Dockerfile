@@ -85,4 +85,5 @@ RUN cd /workspace/${PROJECT}/src/lib/model/networks/ && \
 
 ENV PYTHONPATH="/workspace/${PROJECT}:/workspace/${PROJECT}/src/lib/model/networks/DCNv2:$PYTHONPATH"
 
-ENTRYPOINT ["/workspace/${PROJECT}/benchmark.sh"]
+CMD ["/usr/bin/bash", "-c", "/workspace/${PROJECT}/benchmark.sh"]
+
