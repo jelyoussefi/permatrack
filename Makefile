@@ -7,6 +7,8 @@ DOCKER_IMAGE ?= ${PROJECT}:latest
 
 DATA_PATH ?= /data
 
+export DOCKER_BUILDKIT=1
+
 SHMSIZE ?= 444G
 DOCKER_OPTS := \
 			--name ${PROJECT} \
@@ -52,12 +54,12 @@ clean:
 	find . -name "__pycache__" | xargs rm -rf
 
 docker-build:
-	docker build  ${DOCKER_BUILD_PROXY} \
+	@docker build --force-rm ${DOCKER_BUILD_PROXY} \
 		-f docker/Dockerfile \
 		-t ${DOCKER_IMAGE} .
 
 docker-start-interactive: docker-build
-	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_RUN_PROXY} ${DOCKER_IMAGE} bash
+	@nvidia-docker run ${DOCKER_OPTS} ${DOCKER_RUN_PROXY} ${DOCKER_IMAGE} bash
 
 docker-run: docker-build
 	nvidia-docker run ${DOCKER_OPTS} ${DOCKER_RUN_PROXY} ${DOCKER_IMAGE} \
