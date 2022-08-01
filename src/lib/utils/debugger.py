@@ -17,35 +17,35 @@ from queue import Queue, Empty
 from flask import Flask, render_template, Response, jsonify, request
 
 class WebServer():
-    def __init__(self, queue, port=5000):
-      self.app = Flask(__name__)
-      self.port = port
-      self,queue = queue;
-      self.cv = Condition()
-      self.running = False; 
+  def __init__(self, queue, port=5000):
+    self.app = Flask(__name__)
+    self.port = port
+    self,queue = queue;
+    self.cv = Condition()
+    self.running = False; 
 
-    def start(self):
-      self.cv.acquire()
-    
-      if self.running == False:
-        self.proc = Thread(target=self.handler)
-        self.proc.daemon = True
-        self.running = True;
-        self.proc.start()
+  def start(self):
+    self.cv.acquire()
+  
+    if self.running == False:
+      self.proc = Thread(target=self.handler)
+      self.proc.daemon = True
+      self.running = True;
+      self.proc.start()
 
+    self.cv.release()
+
+  def stop(self):
+    self.cv.acquire()
+      
+    if self.running:
+      self.running = False;
+      self.cv.notify()
       self.cv.release()
-
-    def stop(self):
+      self.proc.join()
       self.cv.acquire()
-        
-      if self.running:
-        self.running = False;
-        self.cv.notify()
-        self.cv.release()
-        self.proc.join()
-        self.cv.acquire()
 
-      self.cv.release()
+    self.cv.release()
 
   def handler(self):
     app = self.app
@@ -66,11 +66,11 @@ class WebServer():
 
         frame = self.queue.get(timeout=0.5)
         if frame is not None:
-            self.cv.release()
-            ret, jpg = cv2.imencode('.jpg', frame)
-            yield (b'--frame\r\n'
-              b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
-            self.cv.acquire()
+          self.cv.release()
+          ret, jpg = cv2.imencode('.jpg', frame)
+          yield (b'--frame\r\n'
+            b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
+          self.cv.acquire()
           
     self.cv.release()
 
