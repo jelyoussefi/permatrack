@@ -26,12 +26,14 @@ class WebServer():
     self.ready = False
 
   def start(self, camera_id):
+    printf("------------------------------------------------- {}".format(camera_id))
     self.cv.acquire()
   
+    self.camera_id = camera_id
+
     if self.running == False:
       self.proc = Thread(target=self.handler)
       self.proc.daemon = True
-      self.camera_id = camera_id
       self.running = True;
       self.proc.start()
 
