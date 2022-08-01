@@ -26,7 +26,6 @@ class WebServer():
     self.ready = False
 
   def start(self, camera_id):
-    printf("------------------------------------------------- {}".format(camera_id))
     self.cv.acquire()
   
     self.camera_id = camera_id
@@ -84,12 +83,15 @@ class WebServer():
         continue
 
       if frame is not None:
-        text = "Camera "+str(self.camera_id)
-        coordinates = (100,100)
-        fontScale = 1
-        color = (255,0,255)
+        frame_size = frame.shape[:-1]
+        fontFace = cv2.FONT_HERSHEY_SIMPLEX
+        fontScale = 0.5
+        color = (0,255,0)
         thickness = 2
-        frame = cv2.putText(frame, text, coordinates, cv2.FONT_HERSHEY_SIMPLEX, fontScale, color, thickness, cv2.LINE_AA)
+        text = "Camera "+str(self.camera_id)
+        textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
+        textPos = (int(frame_size[1]/2 - textsize[0]/2), 10)
+        frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
 
         self.cv.release()
         ret, jpg = cv2.imencode('.jpg', frame)
