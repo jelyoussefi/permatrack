@@ -74,23 +74,24 @@ class WebServer():
 
     @app.route('/video_feed')
     def video_feed():
-      self.cv.acquire()
-      
-      queue = Queue();
-      self.queues.append(queue)
-      
-      self.cv.release()
-
-      return Response(self.video_stream(queue), mimetype='multipart/a-mixed-replace; boundary=frame')
+      return Response(self.video_stream(), mimetype='multipart/a-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
   def video_stream(self, queue): 
 
+    self.cv.acquire()
+    
+    q = Queue();
+    self.queues.append(q)
+    
+    self.cv.release()
+
+
     while self.running:
       try:
-        print("------------------------------ {}".format(queue.size()))
-        frame = queue.get(timeout=0.5)
+        print("------------------------------ {}".format(q.size()))
+        frame = q.get(timeout=0.5)
       except:
         continue
 
