@@ -62,7 +62,7 @@ class WebServer():
     @app.route('/')
     def index():
       self.ready = True;
-      return render_template('index.html', camera_id=camera_id)
+      return render_template('index.html', camera_id=self.camera_id)
 
     @app.route('/video_feed')
     def video_feed():
