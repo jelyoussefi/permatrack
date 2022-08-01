@@ -82,6 +82,13 @@ class WebServer():
         continue
 
       if frame is not None:
+        text = "Camera "+self.camera_id
+        coordinates = (100,100)
+        fontScale = 1
+        color = (255,0,255)
+        thickness = 2
+        frame = cv2.putText(frame, text, coordinates, cv2.FONT_HERSHEY_SIMPLEX, fontScale, color, thickness, cv2.LINE_AA)
+
         self.cv.release()
         ret, jpg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
