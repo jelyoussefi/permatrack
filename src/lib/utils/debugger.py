@@ -20,14 +20,13 @@ class WebServer():
   def __init__(self, queue, port=5000):
     self.app = Flask(__name__)
     self.port = port
-    self.queue = queue;
+    self.queues = [];
     self.cv = Condition()
     self.running = False; 
-    self.ready = False
 
   def start(self, camera_id):
     self.cv.acquire()
-  
+
     self.camera_id = camera_id
 
     if self.running == False:
@@ -53,8 +52,20 @@ class WebServer():
 
   def put(self, frame):
     self.cv.acquire()
-    if self.ready:
-      self.queue.put_nowait(frame)
+
+    frame_size = frame.shape[:-1]
+    fontFace = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 0.5
+    color = (0,255,0)
+    thickness = 1
+    text = "Camera "+str(self.camera_id)
+    textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
+    textPos = (int(frame_size[1]/2 - textsize[0]/2), 15)
+    frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
+   
+    for q in self.queues:
+      q.put_nowait(frame)
+
     self.cv.release()
   
 
@@ -67,32 +78,25 @@ class WebServer():
 
     @app.route('/video_feed')
     def video_feed():
-      return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+      queue = Queue;
+      self.queues.append(queue)
+      return Response(self.video_stream(queue), mimetype='multipart/a-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
-  def video_stream(self): 
+  def video_stream(self, queue): 
     self.cv.acquire()
 
     while self.running:
       try:
         self.cv.release()
-        frame = self.queue.get(timeout=0.5)
+        frame = queue.get(timeout=0.5)
         self.cv.acquire()
       except:
         continue
 
       if frame is not None:
-        frame_size = frame.shape[:-1]
-        fontFace = cv2.FONT_HERSHEY_SIMPLEX
-        fontScale = 0.5
-        color = (0,255,0)
-        thickness = 1
-        text = "Camera "+str(self.camera_id)
-        textsize = cv2.getTextSize(text, fontFace, fontScale, thickness)[0]
-        textPos = (int(frame_size[1]/2 - textsize[0]/2), 15)
-        frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
-
+        
         self.cv.release()
         ret, jpg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
@@ -346,7 +350,7 @@ class Debugger(object):
     self.video_file.write(self.imgs[vis_type])
 
   def add_to_web_server(self, vis_type='generic'):
-    self.queue.put(self.imgs[vis_type])
+    self.web_server.put(self.imgs[vis_type])
     
   def save_all_imgs(self, path='./cache/debug/', prefix='', genID=False):
     if genID:
