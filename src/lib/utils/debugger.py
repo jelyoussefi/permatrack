@@ -18,38 +18,34 @@ from flask import Flask, render_template, Response, jsonify, request
 
 class WebServer():
     def __init__(self, queue, port=5000):
-        self.app = Flask(__name__)
-        self.port = port
-        self,queue = queue;
-        self.cv = Condition()
-        self.running = False; 
+      self.app = Flask(__name__)
+      self.port = port
+      self,queue = queue;
+      self.cv = Condition()
+      self.running = False; 
 
     def start(self):
-        self.cv.acquire()
+      self.cv.acquire()
     
-        if self.running == False:
-            target = self.__handler
-            if self._handler:
-            target = self._handler
+      if self.running == False:
+        self.proc = Thread(target=self.handler)
+        self.proc.daemon = True
+        self.running = True;
+        self.proc.start()
 
-            self.proc = Thread(target=self.handler)
-            self.proc.daemon = True
-            self.running = True;
-            self.proc.start()
-
-        self.cv.release()
+      self.cv.release()
 
     def stop(self):
-        self.cv.acquire()
+      self.cv.acquire()
         
-        if self.running:
-            self.running = False;
-            self.cv.notify()
-            self.cv.release()
-            self.proc.join()
-            self.cv.acquire()
-
+      if self.running:
+        self.running = False;
+        self.cv.notify()
         self.cv.release()
+        self.proc.join()
+        self.cv.acquire()
+
+      self.cv.release()
 
   def handler(self):
     app = self.app
@@ -59,7 +55,7 @@ class WebServer():
 
     @app.route('/video_feed')
     def video_feed:
-        return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+      return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 

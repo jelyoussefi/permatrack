@@ -29,7 +29,7 @@ class opts(object):
                                   '1: only show the final detection results'
                                   '2: show the network output features'
                                   '3: use matplot to display' # useful when lunching training with ipython notebook
-                                  '4: save all visualizations to disk')
+                                  '4: save all visualizations to disk'
                                   '5: stream via webserver')
 
     self.parser.add_argument('--no_pause', action='store_true')
