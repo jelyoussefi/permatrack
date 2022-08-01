@@ -11,6 +11,72 @@ import numpy as np
 import cv2
 from .ddd_utils import compute_box_3d, project_to_image, draw_box_3d
 
+from threading import Thread, Condition
+import queue
+from queue import Queue, Empty
+from flask import Flask, render_template, Response, jsonify, request
+
+class WebServer():
+    def __init__(self, queue, port=5000):
+        self.app = Flask(__name__)
+        self.port = port
+        self,queue = queue;
+        self.cv = Condition()
+        self.running = False; 
+
+    def start(self):
+        self.cv.acquire()
+    
+        if self.running == False:
+            target = self.__handler
+            if self._handler:
+            target = self._handler
+
+            self.proc = Thread(target=self.handler)
+            self.proc.daemon = True
+            self.running = True;
+            self.proc.start()
+
+        self.cv.release()
+
+    def stop(self):
+        self.cv.acquire()
+        
+        if self.running:
+            self.running = False;
+            self.cv.notify()
+            self.cv.release()
+            self.proc.join()
+            self.cv.acquire()
+
+        self.cv.release()
+
+  def handler(self):
+    app = self.app
+    @app.route('/')
+    def index():
+      return render_template('index.html')
+
+    @app.route('/video_feed')
+    def video_feed:
+        return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
+
+  def video_stream(self): 
+    self.cv.acquire()
+
+    while self.running:
+
+        frame = self.queue.get(timeout=0.5)
+        if frame is not None:
+            self.cv.release()
+            ret, jpg = cv2.imencode('.jpg', frame)
+            yield (b'--frame\r\n'
+              b'Content-Type: image/jpg\r\n\r\n' + jpg.tobytes() + b'\r\n\r\n')
+            self.cv.acquire()
+          
+    self.cv.release()
 
 class Debugger(object):
   def __init__(self, opt, dataset):
@@ -62,6 +128,16 @@ class Debugger(object):
   def stop_video(self):
     if self.video_file is not None:
       self.video_file.release()
+
+  def start_web_server(self):
+    if self.web_server is None:
+      self.queue = Queue();
+      self.web_server = WebServer(self.queue)
+    self.web_server.start();
+
+  def stop_web_server(self):
+    if self.web_server is not None:
+      self.web_server.stop();
 
   def add_img(self, img, img_id='default', revert_color=False):
     if revert_color:
@@ -216,7 +292,7 @@ class Debugger(object):
           -1:2:2,-1:2:2,-1:2:2][0].flatten() + 0.5*(self.xmax+self.xmin)
         Yb = 0.5*max_range*np.mgrid[
           -1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(self.ymax+self.ymin)
-        Zb = 0.5*max_range*np.mgrid[
+        Zb = 0.5*max_range*np.mgrid[start
           -1:2:2,-1:2:2,-1:2:2][2].flatten() + 0.5*(self.zmax+self.zmin)
         for xb, yb, zb in zip(Xb, Yb, Zb):
           self.ax.plot([xb], [yb], [zb], 'w')
@@ -243,6 +319,9 @@ class Debugger(object):
   
   def add_to_video(self, path='./cache/debug/', vis_type='generic'):
     self.video_file.write(self.imgs[vis_type])
+
+  def add_to_web_server(self, vis_type='generic'):
+    self.queue.put(obj)(self.imgs[vis_type])
     
   def save_all_imgs(self, path='./cache/debug/', prefix='', genID=False):
     if genID:

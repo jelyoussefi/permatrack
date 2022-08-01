@@ -9,4 +9,5 @@ python test.py tracking \
 	--gru_filter_size 7 \
 	--num_gru_layers 1 \
 	--stream_test \
-	--debug 4 
+	--not_show_bbox \
+	--debug 5

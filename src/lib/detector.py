@@ -119,8 +119,12 @@ class Detector(object):
           self.pre_images = [images] * max(1, (self.opt.input_len - 1))
           self.tracker.init_track(
             meta['pre_dets'] if 'pre_dets' in meta else [])
+          
           if self.opt.debug == 4:
             self.debugger.start_video(self.opt.debug_dir, self.video_id, image.shape[1], image.shape[0])
+          elif self.opt.debug == 5:
+            self.debugger.start_web_server();
+
           self.video_id += 1
         pre_hm = None
         if self.opt.pre_hm:
@@ -209,7 +213,10 @@ class Detector(object):
     return ret
 
   def close_video(self):
-    self.debugger.stop_video()
+    if self.opt.debug == 4:
+      self.debugger.stop_video()
+    elif self.opt.debug == 5:
+      self.debugger.start_web_server()
 
   def _transform_scale(self, image, scale=1):
     '''
@@ -553,6 +560,8 @@ class Detector(object):
         debugger.add_to_video(vis_type='pred_hm')
       else:
         debugger.add_to_video()
+    elif self.opt.debug == 5:
+        debugger.add_to_web_server()
     else:
       debugger.show_all_imgs(pause=self.pause)
   
