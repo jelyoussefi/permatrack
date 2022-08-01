@@ -64,6 +64,7 @@ class WebServer():
     frame = cv2.putText(frame, text, textPos, fontFace, fontScale, color, thickness, cv2.LINE_AA)
    
     for q in self.queues:
+      print("--------------------------------------------------")
       q.put_nowait(frame.copy())
 
     self.cv.release()
@@ -90,6 +91,7 @@ class WebServer():
     while self.running:
       try:
         self.cv.release()
+        print("=========== {}".format(queue.size()))
         frame = queue.get(timeout=0.5)
         self.cv.acquire()
       except:
