@@ -301,8 +301,8 @@ class Debugger(object):
           print("====================================================== Found {}".format(tracking_id))
           self.tracking_ids.append(tracking_id)
           self.reset_clicked_position();
-    print("----------------------------- {} {} {}".format(tracking_id, len(self.tracking_ids),  (tracking_id in self.tracking_ids )))
     if len(self.tracking_ids) == 0 or ( tracking_id in self.tracking_ids ):
+      print("----------------------------- {} {} {}".format(tracking_id, len(self.tracking_ids),  (tracking_id in self.tracking_ids )))
       txt = '{}'.format(tracking_id)
       fontsize = 0.5
       cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
