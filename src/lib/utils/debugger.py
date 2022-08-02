@@ -24,6 +24,7 @@ class WebServer():
     self.cv = Condition()
     self.running = False; 
     self.ready = False
+    self.click_pos = None
 
   def start(self, camera_id):
     self.cv.acquire()
@@ -52,6 +53,9 @@ class WebServer():
     self.cv.release()
 
   def put(self, frame):
+    if self.click_pos is not None:
+      print("----------------------- {}".format(self.click_pos))
+      self.click_pos = None
     self.cv.acquire()
     if self.ready:
       self.queue.put_nowait(frame)
@@ -75,7 +79,7 @@ class WebServer():
         self.cv.acquire()
         cmd = request.get_json()
         if cmd['type'] == 'click_position':
-          print("----------------------------------- {} {}".format(cmd['x'],cmd['y'])) 
+          self.click_pos = (int(cmd['x']), cmd['y'])
           
         self.cv.notify()
         self.cv.release()
@@ -359,7 +363,7 @@ class Debugger(object):
     self.video_file.write(self.imgs[vis_type])
 
   def add_to_web_server(self, vis_type='generic'):
-    self.queue.put(self.imgs[vis_type])
+    self.web_server.put(self.imgs[vis_type])
     
   def save_all_imgs(self, path='./cache/debug/', prefix='', genID=False):
     if genID:
