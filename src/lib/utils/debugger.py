@@ -306,7 +306,7 @@ class Debugger(object):
       fontsize = 0.8
       cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
                   cv2.FONT_HERSHEY_SIMPLEX, fontsize, 
-                  (255, 0, 0), thickness=1.5, lineType=cv2.LINE_AA)
+                  (255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
 
   def add_point(self, point, img_id='default'):
     cv2.circle(self.imgs[img_id],
