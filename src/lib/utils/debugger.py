@@ -17,7 +17,7 @@ from queue import Queue, Empty
 from flask import Flask, render_template, Response, json, jsonify, request
 
 class WebServer():
-  def __init__(self, queue, port=5000):
+  def __init__(self, port=5000):
     self.app = Flask(__name__)
     self.port = port
     self.queue = Queue(maxsize=10);
