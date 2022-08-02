@@ -296,7 +296,7 @@ class Debugger(object):
       if bbox is not None and clicked_pos is not None:
         x,y = clicked_pos
         if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
-          print("--- {} added to tracking list ".format(tracking_id))
+          print("\n-------------------------------------------- {} added to tracking list \n".format(tracking_id))
           self.tracking_ids.append(tracking_id)
           self.reset_clicked_position();
 
