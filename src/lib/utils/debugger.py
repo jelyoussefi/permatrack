@@ -298,6 +298,7 @@ class Debugger(object):
       if bbox is not None and clicked_pos is not None:
         x,y = clicked_pos
         if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
+          print("--- {} added to tracking list ".format(tracking_id))
           self.tracking_ids.append(tracking_id)
           self.reset_clicked_position();
 
@@ -306,7 +307,7 @@ class Debugger(object):
       fontsize = 0.8
       cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
                   cv2.FONT_HERSHEY_SIMPLEX, fontsize, 
-                  (255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+                  (0, 0, 255), thickness=2, lineType=cv2.LINE_AA)
 
   def add_point(self, point, img_id='default'):
     cv2.circle(self.imgs[img_id],
