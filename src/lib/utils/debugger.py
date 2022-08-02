@@ -64,6 +64,7 @@ class WebServer():
     self.cv.acquire()
     while not self.queue.empty():
       self.queue.get_nowait()
+    self.cv.release()
 
   def handler(self):
     app = self.app
