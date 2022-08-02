@@ -67,13 +67,13 @@ class WebServer():
 
     @app.route('/video_feed')
     def video_feed():
-      return Response(self.video_stream(), mimetype='multipart/a-mixed-replace; boundary=frame')
+      return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
   def video_stream(self): 
     self.cv.acquire()
-    self.ready = True
+
     while self.running:
       try:
         self.cv.release()
@@ -346,7 +346,7 @@ class Debugger(object):
     self.video_file.write(self.imgs[vis_type])
 
   def add_to_web_server(self, vis_type='generic'):
-    self.web_server.put(self.imgs[vis_type])
+    self.queue.put(self.imgs[vis_type])
     
   def save_all_imgs(self, path='./cache/debug/', prefix='', genID=False):
     if genID:
