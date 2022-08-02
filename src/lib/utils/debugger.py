@@ -61,6 +61,9 @@ class WebServer():
 
   def reset_clicked_position(self):
     self.click_pos = None
+    self.cv.acquire()
+    while not self.queue.empty():
+      self.queue.get_nowait()
 
   def handler(self):
     app = self.app
