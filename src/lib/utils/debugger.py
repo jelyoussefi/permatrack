@@ -517,7 +517,7 @@ class Debugger(object):
     self.imgs[img_id] = bird_view
 
   def add_arrow(self, st, ed, img_id, c=(255, 0, 255), w=2):
-    if not self.opt.not_show_bbox
+    if not self.opt.not_show_bbox:
       cv2.arrowedLine(
         self.imgs[img_id], (int(st[0]), int(st[1])), 
         (int(ed[0] + st[0]), int(ed[1] + st[1])), c, 2,
