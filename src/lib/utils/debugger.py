@@ -292,7 +292,7 @@ class Debugger(object):
     show_tracking_id = True
     clicked_pos = self.get_clicked_position();
 
-    if bbox is not None and click_pos is not None:
+    if bbox is not None and clicked_pos is not None:
       x,y = clicked_pos
       print("-------------- {} {}".format(x,y))
 
