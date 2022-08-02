@@ -296,15 +296,15 @@ class Debugger(object):
                     font, fontsize, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
   def add_tracking_id(self, ct, tracking_id, bbox=None, img_id='default'):
-      clicked_pos = self.get_clicked_position();
-      if bbox is not None and clicked_pos is not None:
-        x,y = clicked_pos
-        if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
-          if ( tracking_id not in self.tracking_ids) :
-            self.tracking_ids.append(tracking_id)
-          else:
-            self.tracking_ids.remove(tracking_id)
-          self.reset_clicked_position();
+    clicked_pos = self.get_clicked_position();
+    if bbox is not None and clicked_pos is not None:
+      x,y = clicked_pos
+      if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
+        if ( tracking_id not in self.tracking_ids) :
+          self.tracking_ids.append(tracking_id)
+        else:
+          self.tracking_ids.remove(tracking_id)
+        self.reset_clicked_position();
 
     if len(self.tracking_ids) == 0 or ( tracking_id in self.tracking_ids ):
       txt = '{}'.format(tracking_id)
