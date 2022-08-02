@@ -296,13 +296,12 @@ class Debugger(object):
     if ( tracking_id not in self.tracking_ids) :
       clicked_pos = self.get_clicked_position();
       if bbox is not None and clicked_pos is not None:
-        print("----------------------------- {}".format(clicked_pos))
         x,y = clicked_pos
         if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
           print("====================================================== Found {}".format(tracking_id))
           self.tracking_ids.append(tracking_id)
           self.reset_clicked_position();
-
+    print("----------------------------- {} {} {}".format(tracking_id, len(self.tracking_ids),  (tracking_id in self.tracking_ids )))
     if len(self.tracking_ids) == 0 or ( tracking_id in self.tracking_ids ):
       txt = '{}'.format(tracking_id)
       fontsize = 0.5
