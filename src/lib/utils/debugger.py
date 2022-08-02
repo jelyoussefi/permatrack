@@ -273,8 +273,6 @@ class Debugger(object):
                     font, fontsize, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
   def add_tracking_id(self, ct, tracking_id, img_id='default'):
-    if tracking_id != 1:
-      return
     txt = '{}'.format(tracking_id)
     fontsize = 0.5
     cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
@@ -519,10 +517,11 @@ class Debugger(object):
     self.imgs[img_id] = bird_view
 
   def add_arrow(self, st, ed, img_id, c=(255, 0, 255), w=2):
-    cv2.arrowedLine(
-      self.imgs[img_id], (int(st[0]), int(st[1])), 
-      (int(ed[0] + st[0]), int(ed[1] + st[1])), c, 2,
-      line_type=cv2.LINE_AA, tipLength=0.3)
+    if not self.opt.not_show_bbox
+      cv2.arrowedLine(
+        self.imgs[img_id], (int(st[0]), int(st[1])), 
+        (int(ed[0] + st[0]), int(ed[1] + st[1])), c, 2,
+        line_type=cv2.LINE_AA, tipLength=0.3)
 
 color_list = np.array(
         [1.000, 1.000, 1.000,
