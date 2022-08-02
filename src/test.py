@@ -185,7 +185,7 @@ def test_with_loss(opt):
         print('No pre_dets for', img_id,
           '. Use empty initialization.')
         adapted_batch['meta']['pre_dets'] = []
-      detector.reset_tracking()
+      #detector.reset_tracking()
       print('Start tracking video', int(adapted_batch['video_id'][0]))
     if opt.public_det:
       if img_id in load_results:
