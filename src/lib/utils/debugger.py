@@ -296,6 +296,7 @@ class Debugger(object):
     if ( tracking_id not in self.tracking_ids) :
       clicked_pos = self.get_clicked_position();
       if bbox is not None and clicked_pos is not None:
+        print("----------------------------- {}".format(clicked_pos))
         x,y = clicked_pos
         if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
           self.tracking_ids.append(tracking_id)
