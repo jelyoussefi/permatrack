@@ -299,6 +299,7 @@ class Debugger(object):
         print("----------------------------- {}".format(clicked_pos))
         x,y = clicked_pos
         if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
+          print("====================================================== Found {}".format(tracking_id))
           self.tracking_ids.append(tracking_id)
           self.reset_clicked_position();
 
