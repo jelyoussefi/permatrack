@@ -99,7 +99,7 @@ def prefetch_test(opt):
         print('No pre_dets for', int(img_id.numpy().astype(np.int32)[0]), 
           '. Use empty initialization.')
         pre_processed_images['meta']['pre_dets'] = []
-      detector.reset_tracking()
+      #detector.reset_tracking()
       print('Start tracking video', int(pre_processed_images['video_id']))
     if opt.public_det:
       if '{}'.format(int(img_id.numpy().astype(np.int32)[0])) in load_results:
