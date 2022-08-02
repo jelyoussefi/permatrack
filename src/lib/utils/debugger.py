@@ -79,7 +79,7 @@ class WebServer():
         self.cv.acquire()
         cmd = request.get_json()
         if cmd['type'] == 'click_position':
-          self.click_pos = (int(cmd['x']), cmd['y'])
+          self.click_pos = (int(cmd['x']), int(cmd['y']))
           
         self.cv.notify()
         self.cv.release()

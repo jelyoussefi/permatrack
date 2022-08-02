@@ -523,7 +523,7 @@ class Detector(object):
           c = None
           # if 'visibility' in item and not item['visibility']:
           #   c = (211,211,211)
-          
+          print("------------Bbox {}".format(item['bbox']))
           debugger.add_coco_bbox(
             item['bbox'], item['class'] - 1, sc, img_id='generic', c=c)
 
