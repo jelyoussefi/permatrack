@@ -14,7 +14,7 @@ from .ddd_utils import compute_box_3d, project_to_image, draw_box_3d
 from threading import Thread, Condition
 import queue
 from queue import Queue, Empty
-from flask import Flask, render_template, Response, jsonify, request
+from flask import Flask, render_template, Response, json, jsonify, request
 
 class WebServer():
   def __init__(self, queue, port=5000):
