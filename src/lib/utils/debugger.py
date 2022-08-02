@@ -20,7 +20,7 @@ class WebServer():
   def __init__(self, queue, port=5000):
     self.app = Flask(__name__)
     self.port = port
-    self.queue = queue;
+    self.queue = Queue(maxsize=10);
     self.cv = Condition()
     self.running = False; 
     self.ready = False
@@ -53,6 +53,8 @@ class WebServer():
     self.cv.release()
 
   def put(self, frame):
+    if self.queue.full():
+      self.queue.get_nowait()
     if self.ready:
       self.queue.put_nowait(frame)
   
@@ -178,8 +180,7 @@ class Debugger(object):
 
   def start_web_server(self, idx):
     if self.web_server is None:
-      self.queue = Queue();
-      self.web_server = WebServer(self.queue)
+      self.web_server = WebServer()
     self.web_server.start(idx);
 
   def stop_web_server(self):
