@@ -566,6 +566,7 @@ class Detector(object):
   
 
   def reset_tracking(self):
+    print("\n\n====================================================================================\n\n")
     self.tracker.reset()
     self.pre_images = None
     self.pre_hms = None
