@@ -61,6 +61,9 @@ class WebServer():
   def get_clicked_position(self):
     return self.click_pos
 
+  def reset_clicked_position(self):
+    self.click_pos = None
+
   def handler(self):
     app = self.app
     @app.route('/')
@@ -130,6 +133,7 @@ class Debugger(object):
     self.video_file = None
     self.queue = None 
     self.web_server = None
+    self.tracking_ids = []
     colors = [(color_list[i]).astype(np.uint8) for i in range(len(color_list))]
     while len(colors) < len(self.names):
       colors = colors + colors[:min(len(colors), len(self.names) - len(colors))]
@@ -289,14 +293,15 @@ class Debugger(object):
                     font, fontsize, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
   def add_tracking_id(self, ct, tracking_id, bbox=None, img_id='default'):
-    show_tracking_id = True
-    clicked_pos = self.get_clicked_position();
+    if ( tracking_id not in self.tracking_ids) :
+      clicked_pos = self.get_clicked_position();
+      if bbox is not None and clicked_pos is not None:
+        x,y = clicked_pos
+        if  x >= bbox[0] and x <= bbox[2] and y >= bbox[1] and y <= bbox[3] :
+          self.tracking_ids.append(tracking_id)
+          self.reset_clicked_position();
 
-    if bbox is not None and clicked_pos is not None:
-      x,y = clicked_pos
-      print("-------------- {} {}".format(x,y))
-
-    if show_tracking_id:
+    if len(self.tracking_ids) == 0 or ( tracking_id in self.tracking_ids ):
       txt = '{}'.format(tracking_id)
       fontsize = 0.5
       cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
@@ -551,6 +556,10 @@ class Debugger(object):
     if self.web_server is not None:
       return self.web_server.get_clicked_position()
     return None
+
+  def reset_clicked_position(self):
+    if self.web_server is not None:
+      self.web_server.reset_clicked_position()
 
 color_list = np.array(
         [1.000, 1.000, 1.000,
