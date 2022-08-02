@@ -69,6 +69,19 @@ class WebServer():
     def video_feed():
       return Response(self.video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+    @app.route('/handle_command', methods = ['POST'])
+    def handle_command():
+      if request.method == 'POST':
+        self.cv.acquire()
+        cmd = request.get_json()
+        if cmd['type'] == 'click_position':
+          print("----------------------------------- {} {}".format(cmd['x'],cmd['y'])) 
+          
+        self.cv.notify()
+        self.cv.release()
+
+      return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+
     self.app.run(host='0.0.0.0', port=str(self.port), threaded=True)
 
   def video_stream(self): 

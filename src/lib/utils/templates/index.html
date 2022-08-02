@@ -30,6 +30,20 @@
     <script> 
     
         $(document).ready(function() {
+
+            send_command = function(data) {
+                $.ajax({
+                    url: '/handle_command',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json;charset=UTF-8',
+                    cache:false,
+                    error: function(response){
+                        alert('Error sending data')
+                    }
+                });
+            }
+
             $("img").on("click", function(event) {
                 bounds=this.getBoundingClientRect();
                 var left=bounds.left;
@@ -42,7 +56,13 @@
                 var ih=this.naturalHeight
                 var px=x/cw*iw
                 var py=y/ch*ih
-                alert("click on "+this.tagName+" at pixel ("+px+","+py+") mouse pos ("+x+"," + y+ ") relative to boundingClientRect at ("+left+","+top+") client image size: "+cw+" x "+ch+" natural image size: "+iw+" x "+ih );
+                send_command(
+                                {
+                                    'type'  : 'click_position',
+                                    'x'     : px,
+                                    'y'     : py
+                                }
+                            )
             });
         });
     
