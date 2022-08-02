@@ -53,14 +53,13 @@ class WebServer():
     self.cv.release()
 
   def put(self, frame):
-    if self.click_pos is not None:
-      print("----------------------- {}".format(self.click_pos))
-      self.click_pos = None
     self.cv.acquire()
     if self.ready:
       self.queue.put_nowait(frame)
     self.cv.release()
   
+  def get_clicked_position(self):
+    return self.click_pos
 
   def handler(self):
     app = self.app
@@ -289,12 +288,20 @@ class Debugger(object):
         cv2.putText(self.imgs[img_id], txt, (bbox[0], bbox[1] - thickness - 1), 
                     font, fontsize, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
-  def add_tracking_id(self, ct, tracking_id, img_id='default'):
-    txt = '{}'.format(tracking_id)
-    fontsize = 0.5
-    cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
-                cv2.FONT_HERSHEY_SIMPLEX, fontsize, 
-                (255, 0, 255), thickness=1, lineType=cv2.LINE_AA)
+  def add_tracking_id(self, ct, tracking_id, bbox=None, img_id='default'):
+    show_tracking_id = True
+    clicked_pos = self.get_clicked_position();
+
+    if bbox is not None and click_pos is not None:
+      x,y = clicked_pos
+      print("-------------- {} {}".format(x,y))
+
+    if show_tracking_id:
+      txt = '{}'.format(tracking_id)
+      fontsize = 0.5
+      cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
+                  cv2.FONT_HERSHEY_SIMPLEX, fontsize, 
+                  (255, 0, 255), thickness=1, lineType=cv2.LINE_AA)
 
   def add_point(self, point, img_id='default'):
     cv2.circle(self.imgs[img_id],
@@ -539,6 +546,11 @@ class Debugger(object):
         self.imgs[img_id], (int(st[0]), int(st[1])), 
         (int(ed[0] + st[0]), int(ed[1] + st[1])), c, 2,
         line_type=cv2.LINE_AA, tipLength=0.3)
+
+  def get_clicked_position(self):
+    if self.web_server is not None:
+      return self.web_server.get_clicked_position()
+    return None
 
 color_list = np.array(
         [1.000, 1.000, 1.000,

@@ -523,7 +523,6 @@ class Detector(object):
           c = None
           # if 'visibility' in item and not item['visibility']:
           #   c = (211,211,211)
-          print("------------Bbox {}".format(item['bbox']))
           debugger.add_coco_bbox(
             item['bbox'], item['class'] - 1, sc, img_id='generic', c=c)
 
@@ -534,7 +533,7 @@ class Detector(object):
         if 'tracking_id' in item and self.opt.demo == '' and \
           not self.opt.show_track_color:
           debugger.add_tracking_id(
-            item['ct'], item['tracking_id'], img_id='generic')
+            item['ct'], item['tracking_id'], item['bbox'], img_id='generic')
 
         if (item['class'] in [1, 2]) and 'hps' in item:
           debugger.add_coco_hp(item['hps'], tracking_id=tracking_id,
