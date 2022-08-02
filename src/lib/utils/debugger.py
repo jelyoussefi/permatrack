@@ -53,10 +53,8 @@ class WebServer():
     self.cv.release()
 
   def put(self, frame):
-    self.cv.acquire()
     if self.ready:
       self.queue.put_nowait(frame)
-    self.cv.release()
   
   def get_clicked_position(self):
     return self.click_pos
