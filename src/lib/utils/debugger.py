@@ -273,6 +273,8 @@ class Debugger(object):
                     font, fontsize, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
   def add_tracking_id(self, ct, tracking_id, img_id='default'):
+    if tracking_id != 1:
+      return
     txt = '{}'.format(tracking_id)
     fontsize = 0.5
     cv2.putText(self.imgs[img_id], txt, (int(ct[0]), int(ct[1])), 
