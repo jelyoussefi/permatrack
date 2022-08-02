@@ -1,28 +1,44 @@
 <html>
-  <head>
-    <style>
-    body {
-    }
-    img { 
-      display:block;
-      margin-left: auto;
-      margin-right:auto;
-      border: 3px solid red;
-      box-shadow: 3px 3px 3px #bbb;
-      } 
-    h1 {
-      padding-top:40px;
-      font-size: 36px;
-    }
 
-  </style>
-    <title>Pedestrian Tracking</title>
-  </head>
-  <body>
-    <h1 align="center">Pedestrian Tracking </h1>
-    <img align="center" src="{{ url_for('video_feed') }}" >
-  </body>
+    <head>
+        <style>
+            body {
+            }
+            img { 
+                display:block;
+                margin-left: auto;
+                margin-right:auto;
+                border: 3px solid red;
+                box-shadow: 3px 3px 3px #bbb;
+              } 
+            h1 {
+                padding-top:40px;
+                font-size: 36px;
+            }
 
+        </style>
+        <title>Pedestrian Tracking</title>
+    </head>
+
+    <body>
+        <h1 align="center">Pedestrian Tracking </h1>
+        <img align="center" src="{{ url_for('video_feed') }}" >
+    </body>
+
+
+    <script> 
+    
+        $(document).ready(function() {
+            $("img").on("click", function(event) {
+              
+                var x = event.pageX - this.offsetLeft;
+                var y = event.pageY - this.offsetTop;
+                alert("X Coordinate: " + x + " Y Coordinate: " + y);
+               
+            });
+        })  
+    
+    </script> 
  
 
 </html>
